@@ -5,7 +5,7 @@ const LATEST_COMIC: usize = 0;
 
 /// A utility to grab XKCD comics
 #[derive(Parser, Debug)]
-pub struct GrabXkcd {
+pub struct Args {
     /// Set a connection timeout
     #[clap(long, short, default_value = "30")]
     pub timeout: u64,
@@ -24,4 +24,13 @@ pub struct GrabXkcd {
 pub enum OutFormat {
     Json,
     Text,
+}
+
+pub struct XkcdClient {
+    args: Args,
+}
+impl XkcdClient {
+    pub fn new(args: Args) -> Self {
+        XkcdClient { args }
+    }
 }

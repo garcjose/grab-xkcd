@@ -1,9 +1,15 @@
 mod cli;
 
-use crate::cli::GrabXkcd;
+use anyhow::Ok;
+use anyhow::Result;
 use clap::Parser;
 
-fn main() {
-    let args = GrabXkcd::parse();
-    // ... TODO
+use crate::cli::Args;
+use crate::cli::XkcdClient;
+
+fn main() -> Result<()> {
+    let args = Args::parse();
+    let client = XkcdClient::new(args);
+    //client.run()
+    Ok(())
 }
