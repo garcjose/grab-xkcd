@@ -92,7 +92,7 @@ impl From<ComicResponse> for Comic {
         Comic {
             title: cr.title,
             num: cr.num,
-            date: format!("{}-{}-{}", cr.day, cr.year, cr.month),
+            date: format!("{}-{}-{}", cr.year, cr.month, cr.day),
             desc: cr.alt,
             img_url: cr.img,
         }
