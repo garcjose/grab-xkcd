@@ -1,3 +1,5 @@
+use anyhow::Ok;
+use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
 const BASE_URL: &str = "https://xkcd.com";
@@ -13,8 +15,8 @@ pub struct Args {
     #[clap(long, short, value_enum, default_value = "text")]
     pub output: OutFormat,
     /// The comic to load
-    #[clap(long, short, default_value = "0")]
-    pub num: usize,
+    #[clap(long, short)]
+    pub num: Option<usize>,
     /// Save image file to current directory
     #[clap(long, short)]
     pub save: bool,
@@ -32,6 +34,25 @@ pub struct XkcdClient {
 impl XkcdClient {
     pub fn new(args: Args) -> Self {
         XkcdClient { args }
+    }
+    pub fn run(&self) -> Result<()> {
+        let url = if let Some(n) = self.args.num {
+            format!("{}/{}/info.0.json", BASE_URL, n)
+        } else {
+            format!("{}/info.0.json", BASE_URL)
+        };
+
+        let http_client = reqwest::blocking::ClientBuilder::new()
+            .timeout(std::time::Duration::from_secs(self.args.timeout))
+            .build()?;
+        let resp: ComicResponse = http_client.get(&url).send()?.text()?.try_into()?;
+        let comic: Comic = resp.into();
+
+        if self.args.save {
+            comic.save()?;
+        }
+        comic.print(self.args.output)?;
+        Ok(())
     }
 }
 
@@ -75,5 +96,18 @@ impl From<ComicResponse> for Comic {
             desc: cr.alt,
             img_url: cr.img,
         }
+    }
+}
+
+impl Comic {
+    fn print(&self, out_format: OutFormat) -> Result<()> {
+        match out_format {
+            OutFormat::Text => println!("{}", todo!("print self as Text")),
+            OutFormat::Json => println!("{}", todo!("print self as JSON")),
+        }
+        Ok(())
+    }
+    fn save(&self) -> Result<()> {
+        Ok(())
     }
 }

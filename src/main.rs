@@ -10,6 +10,6 @@ use crate::cli::XkcdClient;
 fn main() -> Result<()> {
     let args = Args::parse();
     let client = XkcdClient::new(args);
-    //client.run()
+    client.run()?;
     Ok(())
 }
