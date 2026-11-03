@@ -1,3 +1,5 @@
+use std::fmt;
+
 use anyhow::Ok;
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
@@ -98,11 +100,19 @@ impl From<ComicResponse> for Comic {
         }
     }
 }
-
+impl fmt::Display for Comic {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Comic #{}: {} ({})\n{}\nImage URL: {}",
+            self.num, self.title, self.date, self.desc, self.img_url
+        )
+    }
+}
 impl Comic {
     fn print(&self, out_format: OutFormat) -> Result<()> {
         match out_format {
-            OutFormat::Text => println!("{}", todo!("print self as Text")),
+            OutFormat::Text => println!("{}", self),
             OutFormat::Json => println!("{}", todo!("print self as JSON")),
         }
         Ok(())
