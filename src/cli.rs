@@ -34,3 +34,46 @@ impl XkcdClient {
         XkcdClient { args }
     }
 }
+
+#[derive(serde_derive::Deserialize, Debug)]
+pub struct ComicResponse {
+    month: String,
+    num: usize,
+    link: String,
+    year: String,
+    news: String,
+    safe_title: String,
+    transcript: String,
+    alt: String,
+    img: String,
+    title: String,
+    day: String,
+}
+
+impl TryFrom<String> for ComicResponse {
+    type Error = anyhow::Error;
+    fn try_from(json: String) -> Result<Self, Self::Error> {
+        serde_json::from_str(&json).map_err(|e| e.into())
+    }
+}
+
+#[derive(Debug)]
+struct Comic {
+    title: String,
+    num: usize,
+    date: String,
+    desc: String,
+    img_url: String,
+}
+
+impl From<ComicResponse> for Comic {
+    fn from(cr: ComicResponse) -> Self {
+        Comic {
+            title: cr.title,
+            num: cr.num,
+            date: format!("{}-{}-{}", cr.day, cr.year, cr.month),
+            desc: cr.alt,
+            img_url: cr.img,
+        }
+    }
+}
