@@ -1,11 +1,12 @@
 use std::fmt;
+use std::io::Write;
 
 use anyhow::Ok;
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
+use url::Url;
 
 const BASE_URL: &str = "https://xkcd.com";
-const LATEST_COMIC: usize = 0;
 
 /// A utility to grab XKCD comics
 #[derive(Parser, Debug)]
@@ -118,6 +119,22 @@ impl Comic {
         Ok(())
     }
     fn save(&self) -> Result<()> {
+        // reqwest re-exports the url crate's Url type
+        //let url = reqwest::Url::parse(&self.img_url)?;
+        let url = Url::parse(&self.img_url)?;
+        let image_name = url.path_segments().unwrap().last().unwrap();
+
+        let current_dir = std::env::current_dir()?;
+        //let file_name = format!("xkcd-{}.png", self.num);
+        let file_path = current_dir.join(image_name);
+        let mut file = std::fs::File::create(file_path)?;
+
+        let resp = reqwest::blocking::get(&self.img_url)?;
+        // copy using std::io::copy to write (requires mut resp and mut file)
+        //std::io::copy(&mut resp, &mut file)?;
+        // write using write_all (requires mut file)
+        file.write_all(&resp.bytes()?)?;
+
         Ok(())
     }
 }
