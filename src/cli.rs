@@ -80,7 +80,7 @@ impl TryFrom<String> for ComicResponse {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, serde_derive::Serialize)]
 struct Comic {
     title: String,
     num: usize,
@@ -113,7 +113,7 @@ impl Comic {
     fn print(&self, out_format: OutFormat) -> Result<()> {
         match out_format {
             OutFormat::Text => println!("{}", self),
-            OutFormat::Json => println!("{}", todo!("print self as JSON")),
+            OutFormat::Json => println!("{}", serde_json::to_string_pretty(self)?),
         }
         Ok(())
     }
