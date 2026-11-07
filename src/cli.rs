@@ -4,10 +4,10 @@ use clap::{Parser, ValueEnum};
 #[derive(Parser, Debug)]
 pub struct XkcdArgs {
     /// Set a connection timeout
-    #[arg(long, short, default_value = "30")]
+    #[arg(long, short, default_value_t = 30)]
     pub timeout: u64,
     /// Print output in a format
-    #[arg(long, short, value_enum, default_value = "text")]
+    #[arg(long, short, value_enum, default_value_t = OutFormat::Text)]
     pub output: OutFormat,
     /// The comic to load
     #[arg(long, short)]
@@ -17,8 +17,9 @@ pub struct XkcdArgs {
     pub save: bool,
 }
 
-#[derive(ValueEnum, Copy, Clone, Debug)]
+#[derive(ValueEnum, Copy, Clone, Debug, Default, PartialEq, Eq)]
 pub enum OutFormat {
     Json,
+    #[default]
     Text,
 }
