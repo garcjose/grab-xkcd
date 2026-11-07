@@ -4,16 +4,16 @@ use std::fmt;
 use std::io::Write;
 use url::Url;
 
-use crate::cli::Args;
+use crate::cli::XkcdArgs;
 use crate::cli::OutFormat;
 
 const BASE_URL: &str = "https://xkcd.com";
 
 pub struct XkcdClient {
-    args: Args,
+    args: XkcdArgs,
 }
 impl XkcdClient {
-    pub fn new(args: Args) -> Self {
+    pub fn new(args: XkcdArgs) -> Self {
         XkcdClient { args }
     }
     pub fn run(&self) -> Result<()> {
