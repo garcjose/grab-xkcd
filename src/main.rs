@@ -1,11 +1,12 @@
 mod cli;
+mod client;
 
 use anyhow::Ok;
 use anyhow::Result;
 use clap::Parser;
 
 use crate::cli::Args;
-use crate::cli::XkcdClient;
+use crate::client::XkcdClient;
 
 fn main() -> Result<()> {
     let args = Args::parse();
