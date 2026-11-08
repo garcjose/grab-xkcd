@@ -23,3 +23,16 @@ pub enum OutFormat {
     #[default]
     Text,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::CommandFactory;
+
+    #[test]
+    fn test_cli() {
+        let mut cmd = XkcdArgs::command();
+        println!("{:?}", cmd.render_usage());
+        cmd.debug_assert();
+    }
+}
